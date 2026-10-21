@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vuayage"
+  short_description: "5 Novaturo paskutinės minutės kelionės ir sąlygos"
+  default_prompt: "Surask 5 galiojančius Novaturo paskutinės minutės kelionių pasiūlymus ir jų sąlygas."
