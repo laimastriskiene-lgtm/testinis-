@@ -22,3 +22,13 @@ RO – be maitinimo; BB – pusryčiai; HB – pusryčiai ir vakarienė; AI – 
 
 ## Testavimas
 Naudok `evals/scenarios.md` scenarijus. Patikrink datų filtravimą, nepatvirtintų kainų žymėjimą, trūkstamus duomenis ir neveikiantį puslapį. Testai nėra gyvų pasiūlymų patvirtinimas.
+## Galiojančių kelionių tikrinimas
+
+1. Nustatyk šiandienos datą Lietuvos laiku.
+2. Ieškok 5 paskutinės minutės kelionių novaturas.lt.
+3. Atmesk keliones, kurių išvykimo data praėjusi.
+4. Patikrink kainą, maitinimą ir kelionės trukmę.
+5. Pateik tiesioginę nuorodą į kiekvieną kelionę.
+6. Jei rasi mažiau nei 5, pateik tik rastus.
+7. Jei pasiūlymų nėra, aiškiai apie tai pranešk.
+8. Niekada neišgalvok kainų ar datų.
