@@ -1,22 +1,22 @@
 ---
 name: miestu-oras
-description: Pateikia penkių didžiausių Lietuvos miestų (Vilniaus, Kauno, Klaipėdos, Šiaulių ir Panevėžio) naujausią meteo.lt oro temperatūros ir sąlygų prognozę lietuviškai. Naudok, kai prašoma Lietuvos didmiesčių orų, temperatūrų palyginimo arba „miestu-oras“ įgūdžio.
+description: Pateikia Vilniaus, Kauno, Klaipėdos, Šiaulių ir Panevėžio temperatūros bei oro sąlygų prognozę lietuviškai iš Meteo.lt, su automatiniu Open-Meteo atsarginiu šaltiniu. Naudok prašant Lietuvos didmiesčių orų, temperatūrų palyginimo arba miestu-oras įgūdžio.
 ---
 
 # Miestų oras
 
-## Veiksmų seka
+Paleisk `python scripts/miestu_oras.py` iš šio įgūdžio aplanko arba nurodyk visą skripto kelią. Reikia interneto ir Python 3.9+. Naudojamos tik standartinės bibliotekos; jei Windows neturi IANA laiko juostų duomenų, reikia `python -m pip install tzdata`. API rakto nereikia.
 
-1. Naudok oficialią Lietuvos hidrometeorologijos tarnybos API `https://api.meteo.lt/v1/`. Reikalingas interneto ryšys ir Python 3; papildomų bibliotekų ar API rakto nereikia.
-2. Paleisk `python scripts/miestu_oras.py` iš šio įgūdžio aplanko (arba nurodyk pilną skripto kelią).
-3. Skriptas kiekvienam miestui atskirai gauna `places/{code}/forecasts/long-term` duomenis ir pasirenka artimiausią dar nepraėjusį prognozės laiką UTC. Tai **prognozė**, ne faktinis matavimas. Neteik jos kaip stebėjimų duomenų.
-4. Grąžink skripto lietuvišką lentelę, išsaugodamas prognozės laiką Lietuvos laiku ir šaltinį. Jei miestas nepasiekiamas, parodyk „Duomenų nėra“, nekurk temperatūros ar sąlygų.
-5. Jei visi API kreipiniai nepavyko, aiškiai pasakyk, kad orų duomenų gauti nepavyko; nenaudok spėjimų.
+Kiekvienam miestui pirmiausia naudojama `https://api.meteo.lt/v1/places/{code}/forecasts/long-term`. Jei užklausa nepavyksta, JSON netinkamas arba nėra tinkamos prognozės, automatiškai naudojama `https://api.open-meteo.com/v1/forecast` su fiksuotomis miesto koordinatėmis ir valandiniais `temperature_2m,weather_code` duomenimis UTC bei Celsijaus vienetais.
 
-## Rezultatas
+Skriptas pasirenka artimiausią dar nepraėjusį tinkamą prognozės laiką, ne daugiau kaip 3 valandos nuo vykdymo pradžios. Tinkamas įrašas turi baigtinę skaitinę temperatūrą ir žinomą sąlygų kodą. Sugadinti, pasenę, per tolimi ir nežinomų kodų įrašai praleidžiami; jei tinkamų nelieka, bandomas atsarginis šaltinis. Meteo.lt kodai ir Open-Meteo WMO kodai verčiami į lietuvių kalbą skripte.
 
-Lentelė: **Miestas | Temperatūra (°C) | Oro sąlygos | Prognozės laikas**. Po lentele: **Šaltinis: Lietuvos hidrometeorologijos tarnyba, meteo.lt (prognozė)**. Nenurodyk vieno bendro laiko, jei miestų laikai skiriasi.
+Pateik visų penkių miestų temperatūrą, oro sąlygas, prognozės laiką ir šaltinį iš skripto išvesties. Laikas konvertuojamas į `Europe/Vilnius`, atsižvelgiant į vasaros ir žiemos laiką; UTC poslinkis padeda atskirti pasikartojančią valandą. Kiekviena eilutė turi savo šaltinį: LHMT (`api.meteo.lt`) arba Open-Meteo (`api.open-meteo.com`). Tai prognozė, ne faktinis matavimas.
+
+Jei abu šaltiniai konkrečiam miestui nepateikia tinkamų duomenų, išsaugok eilutę „Duomenų nėra“ ir aiškų abiejų šaltinių nesėkmės pranešimą. Nespėliok temperatūros, sąlygų ar laiko. Kitų miestų gavimą tęsk. Kai nė vienam miestui duomenų nėra, skriptas papildomai pateikia bendrą klaidą ir baigiasi kodu `1`; bent vieno miesto sėkmė grąžina `0`. Trūkstant laiko juostų duomenų, baigiama kodu `1` su `tzdata` diegimo instrukcija.
 
 ## Patikra
 
-Paleisk `python -m unittest discover -s evals -v`. Patikrink, kad yra tiksliai penki miestai, teisingai konvertuojamas UTC laikas, nežinomas sąlygų kodas neišgalvojamas, o HTTP klaida nesugriauna kitų miestų rezultatų.
+`python -m unittest discover -s evals -v` tikrina pagrindinio šaltinio pirmenybę, automatinį perėjimą po HTTP / tinklo / JSON klaidų ir netinkamų duomenų, abiejų šaltinių nesėkmę, WMO kodus, laiko konvertavimą bei dalinę sėkmę. Testams interneto nereikia. Tada paleisk skriptą su tikrais API; vien testai nepatvirtina tinklo prieinamumo.
+
+API schemos ir kodai: [Meteo.lt dokumentacija](https://api.meteo.lt/), [Open-Meteo dokumentacija](https://open-meteo.com/en/docs).

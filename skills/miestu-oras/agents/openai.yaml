@@ -1,4 +1,4 @@
 interface:
   display_name: "Miestų oras"
-  short_description: "5 didžiausių Lietuvos miestų orai iš meteo.lt"
-  default_prompt: "Parodyk Vilniaus, Kauno, Klaipėdos, Šiaulių ir Panevėžio temperatūrą ir oro sąlygas pagal naujausią meteo.lt prognozę."
+  short_description: "5 Lietuvos miestų orai iš Meteo.lt arba Open-Meteo"
+  default_prompt: "Parodyk Vilniaus, Kauno, Klaipėdos, Šiaulių ir Panevėžio temperatūros bei oro sąlygų prognozę su šaltiniu ir Lietuvos laiku."
