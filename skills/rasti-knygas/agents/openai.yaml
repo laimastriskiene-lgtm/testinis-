@@ -1,0 +1,3 @@
+interface:
+  display_name: "Knygų paieška"
+  short_description: "Ieško knygų ir perduoda rezultatus kitam etapui"
