@@ -1,0 +1,3 @@
+interface:
+  display_name: "Knygų duomenų gavimas"
+  short_description: "Papildo knygas aprašymais ir temomis iš Open Library"
