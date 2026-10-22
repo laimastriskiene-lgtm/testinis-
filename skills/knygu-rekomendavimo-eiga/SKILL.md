@@ -7,6 +7,10 @@ description: Viena užduotimi vykdo visą penkių knygų įgūdžių seką nuo O
 
 Tai valdantis įgūdis, skirtas agentui su interneto, failų skaitymo ir rašymo priemonėmis. Jis sujungia esamus penkis įgūdžius viename pokalbio vykdyme. Atskiro API rakto, fono proceso ar periodinio tvarkaraščio nereikia. Vien GitHub saugomi failai savaime nepasileidžia: šias instrukcijas perskaito ir vykdo agentas.
 
+## GitHub mygtukas „Run workflow“
+
+Repozitorijoje taip pat yra rankiniu mygtuku paleidžiama GitHub Actions eiga **Knygų rekomendacijos**. Kai vartotojas renkasi GitHub paleidimą, naudok [GitHub Actions instrukciją](references/github-actions.md). Šiam režimui [scripts/vykdyti.py](scripts/vykdyti.py) realizuoja penkių etapų taisykles Python kodu be AI API rakto; tai nėra agentas, interpretuojantis SKILL.md. Jis tikrina įgūdžių failų buvimą ir įrašo jų versijas. Toliau aprašyta agento pokalbio eiga lieka atskiras režimas.
+
 ## Pradžia
 
 1. Iš vartotojo užduoties nustatyk query, limit (1–20, numatyta 10) ir preferences (numatyta {}). Kai query trūksta ir jo negalima nustatyti iš užduoties, paklausk temos, pavadinimo arba autoriaus. Nebūtiniems kriterijams papildomo patvirtinimo neprašyk. Temai leidžiama pasirinkti tikslią Open Library užklausą, pvz., vartotojo fantastikos paieškai `subject:fantasy`; naudojamą užklausą parodyk.

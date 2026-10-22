@@ -1,0 +1,79 @@
+name: Knygų rekomendacijos
+run-name: Knygų paieška – ${{ inputs.query }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: 'Paieška Open Library (pvz., subject:fantasy arba healthy living)'
+        required: true
+        default: 'subject:fantasy'
+        type: string
+      limit:
+        description: 'Kiek kandidatų ieškoti (1–20; po atrankos jų gali likti mažiau)'
+        required: true
+        default: 6
+        type: number
+      min_year:
+        description: 'Pirmos publikacijos metai nuo (pvz., 2000)'
+        required: true
+        default: 2000
+        type: number
+      max_year:
+        description: 'Pirmos publikacijos metai iki (nebūtina)'
+        required: false
+        default: ''
+        type: string
+      preferences:
+        description: 'Papildomi kriterijai JSON; jei nereikia, palikite {}'
+        required: false
+        default: '{}'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  books:
+    name: Penki knygų etapai
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Atsisiųsti repozitoriją
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Paruošti Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.12'
+      - name: Patikrinti vykdytoją
+        run: python -m unittest discover -s skills/knygu-rekomendavimo-eiga/evals -p 'test_*.py' -v
+      - name: Vykdyti penkis etapus
+        env:
+          BOOK_QUERY: ${{ inputs.query }}
+          BOOK_LIMIT: ${{ inputs.limit }}
+          BOOK_MIN_YEAR: ${{ inputs.min_year }}
+          BOOK_MAX_YEAR: ${{ inputs.max_year }}
+          BOOK_PREFERENCES: ${{ inputs.preferences }}
+          PYTHONUNBUFFERED: '1'
+        run: python skills/knygu-rekomendavimo-eiga/scripts/vykdyti.py --output results
+      - name: Parodyti rezultatą puslapio santraukoje
+        if: always()
+        shell: python
+        run: |
+          import os
+          from pathlib import Path
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a', encoding='utf-8') as summary:
+              for filename in ('05-rekomendacijos.md', 'sustojimo-priezastis.md'):
+                  path = Path('results') / filename
+                  if path.is_file():
+                      summary.write(path.read_text(encoding='utf-8'))
+      - name: Išsaugoti visų etapų failus
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: knygu-rezultatai-${{ github.run_id }}-${{ github.run_attempt }}
+          path: results/
+          if-no-files-found: warn
+          retention-days: 14
