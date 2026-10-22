@@ -1,0 +1,3 @@
+interface:
+  display_name: "Knygų atranka"
+  short_description: "Atrenka knygas pagal kriterijus ir pažymi nežinomus duomenis"
