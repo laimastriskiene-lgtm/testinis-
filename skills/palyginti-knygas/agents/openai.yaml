@@ -1,0 +1,3 @@
+interface:
+  display_name: "Knygų palyginimas"
+  short_description: "Palygina atrinktas knygas ir pagrindžia jų skirtumus"
